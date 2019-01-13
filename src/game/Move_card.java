@@ -11,18 +11,26 @@ import java.awt.image.BufferedImage;
 public class Move_card extends JPanel implements Runnable{
 	private Thread th;
 	JButton card;
-	int tmp=0;
+	BufferedImage ca;
+	int tmp=0, i=0, j;
 	public Move_card() {
 	}
-	public void set_card(JButton card1, int a) {
-		card = card1;
+	public void set_card(BufferedImage c, int a) {
+		ca = c;
 		tmp = a;
+		i = tmp;
 	}
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.drawImage(ca, i, j, this);
+	}
+	@Override
 	public void run() {
-		int i,j=550;
-		card.setLocation(tmp, 550);
+		j = 550;
+		repaint();
 		for ( i = tmp; i <= 400; i += 100) {
-			card.setLocation(i, j);
+			repaint();
 			try {
 				Thread.sleep(100);
 			} catch(InterruptedException e) {

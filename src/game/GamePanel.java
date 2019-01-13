@@ -13,9 +13,10 @@ import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 BufferedImage ground;
-	 Image cardimage;
+	 BufferedImage[] cardimage = new BufferedImage[13];
 	 ImageIcon[] card = new ImageIcon[13];
 	 JButton[] spade = new JButton[5];
+	 int[] place = new int[5];
 	 int i;
 	 private Thread thread;
 	 boolean in_game = true;
@@ -27,7 +28,8 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		try {
 			ground = ImageIO.read(new File("images/background.jpg"));
 			for ( i = 0; i < 13; i++) {
-				card[i] = new ImageIcon("./images/s"+(i+1)+".png");
+				card[i] = new ImageIcon("./images/"+(i+1)+".png");
+				cardimage[i] = ImageIO.read(new File("./images/"+(i+1)+".png"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -36,9 +38,10 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			spade[i] = new JButton(card[i]);
 			spade[i].addActionListener(this);
 			spade[i].setLocation(p, 550);
-			spade[i].setSize(120, 190);
+			spade[i].setSize(130, 190);
 			p += 150;
 			add(spade[i]);
+			place[i] = i;
 		}
 		thread = new Thread(this);
 		thread.start();
@@ -64,15 +67,13 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if ( e.getSource() == spade[0]) {
-			cardimage = card[0].getImage();
-			mc.set_card(spade[0], 100);
-			mc.Card_to_center();
-			spade[0] = new JButton(card[i]);
-			spade[0].setLocation(100, 550);
-			spade[0].setSize(120, 190);
-			add(spade[0]);
+			/*mc.set_card(cardimage[0], 100);
+			mc.Card_to_center();*/
+			spade[0].setIcon(card[i]);
+			//spade[0].setLocation(100, 550);
+			spade[0].setSize(130, 190);
+			//add(spade[0]);
 			i += 1;
-			System.out.println(i);
 		}
 	}
 
