@@ -94,10 +94,19 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			/*mc.set_card(cardimage[0], 100);
 			mc.Card_to_center();*/
 			spade[0].setIcon(card[deck[i]]);
-			//spade[0].setLocation(100, 550);
-			spade[0].setSize(130, 190);
-			//add(spade[0]);
 			i += 1;
+		} else if ( e.getSource() == spade[1]) {
+			spade[1].setIcon(card[deck[i]]);
+			i+=1;
+		} else if (e.getSource() == spade[2]) {
+			spade[2].setIcon(card[deck[i]]);
+			i+=1;
+		} else if (e.getSource() == spade[3]) {
+			spade[3].setIcon(card[deck[i]]);
+			i+=1;
+		} else if (e.getSource() == spade[4]) {
+			spade[4].setIcon(card[deck[i]]);
+			i+=1;
 		}
 	}
 
