@@ -15,13 +15,14 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 BufferedImage ground;
 	 BufferedImage[] cardimage = new BufferedImage[52];
 	 ImageIcon[] card = new ImageIcon[52];
-	 JButton[] spade = new JButton[5];
+	 JButton[] hand = new JButton[5];
 	 int[] place = new int[5];
 	 int[] deck = new int[52];
-	 int i;
+	 int i, point=0;
 	 private Thread thread;
 	 boolean in_game = true;
 	 Move_card mc = new Move_card();
+	 Poker_point pp = new Poker_point();
 	 
 	public GamePanel(MainPanel panel) {
 		int p = 100;
@@ -37,14 +38,15 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		}
 		qrand(deck, 52);
 		for ( i = 0; i < 5; i++) {
-			spade[i] = new JButton(card[deck[i]]);
-			spade[i].addActionListener(this);
-			spade[i].setLocation(p, 550);
-			spade[i].setSize(130, 190);
+			hand[i] = new JButton(card[deck[i]]);
+			hand[i].addActionListener(this);
+			hand[i].setLocation(p, 550);
+			hand[i].setSize(130, 190);
 			p += 150;
-			add(spade[i]);
+			add(hand[i]);
 			place[i] = deck[i];
 		}
+		pp.check_point(place);
 		thread = new Thread(this);
 		thread.start();
 	}
@@ -90,24 +92,14 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if ( e.getSource() == spade[0]) {
-			/*mc.set_card(cardimage[0], 100);
-			mc.Card_to_center();*/
-			spade[0].setIcon(card[deck[i]]);
-			i += 1;
-		} else if ( e.getSource() == spade[1]) {
-			spade[1].setIcon(card[deck[i]]);
-			i+=1;
-		} else if (e.getSource() == spade[2]) {
-			spade[2].setIcon(card[deck[i]]);
-			i+=1;
-		} else if (e.getSource() == spade[3]) {
-			spade[3].setIcon(card[deck[i]]);
-			i+=1;
-		} else if (e.getSource() == spade[4]) {
-			spade[4].setIcon(card[deck[i]]);
-			i+=1;
+		for (int k = 0; k < 5; k++) {
+			if ( e.getSource() == hand[k]) {
+				hand[k].setIcon(card[deck[i]]);
+				place[k] = deck[i];
+				i += 1;
+				break;
+			}
 		}
+		pp.check_point(place);
 	}
-
 }
