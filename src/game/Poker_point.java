@@ -35,7 +35,7 @@ public class Poker_point {
 		case 32: role = "straight"; break;
 		case 24: role = "flush"; break;
 		case 16: role = "full house"; break;
-		case 8: role = "three pair"; break;
+		case 8: role = "three card"; break;
 		case 2: role = "two pair"; break;
 		case 1: role = "one pair"; break;
 		default: role="no pair"; break;

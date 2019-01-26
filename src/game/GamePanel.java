@@ -24,7 +24,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 Font f1 = new Font("Serif", Font.PLAIN, 24);
 	 private Thread thread;
 	 boolean in_game = true;
-	 Move_card mc = new Move_card();
+	 //Move_card mc = new Move_card();
 	 Poker_point pp = new Poker_point();
 	 Move_backcard mb = new Move_backcard();
 	 
@@ -106,6 +106,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			if ( e.getSource() == hand[k]) {
 				hand[k].setIcon(card[deck[i]]);
 				place[k] = deck[i];
+				mb.Move_from_deck(backcard, k);
 				i += 1;
 				break;
 			}
