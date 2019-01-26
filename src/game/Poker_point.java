@@ -6,10 +6,12 @@ public class Poker_point {
 	int p0, p1, p2, p3;
 	int k,tmp;
 	public Poker_point() {
+		for ( k = 0; k < 13; k++) { num[k] = 0;}
 		for ( k = 0; k < 4; k++) { sut[k] = 0; }
-		for ( k = 0; k < 13; k++) { num[k] = 0; }
 	}
-	public void check_point(int hand[]) {
+	public String check_point(int hand[]) {
+		for ( k = 0; k < 13; k++) { num[k] = 0;}
+		for ( k = 0; k < 4; k++) { sut[k] = 0; }
 		for ( k = 0; k < 5; k++) {
 			tmp = hand[k] % 13; num[tmp]++;
 		}
@@ -17,21 +19,38 @@ public class Poker_point {
 			tmp = hand[k] / 13; sut[tmp]++;
 		}
 		p1 = point_pair(num);
-		p2 = point_flash(num);
+		p2 = point_flash(sut);
 		p3 = point_straight(num, p2);
 		p0 = p1;
 		if ( p0 < p2) { p0 = p2; }
 		if ( p0 < p3) { p0 = p3; }
-		show_point(p0);
+		return show_point(p0);
 	}
-	public void show_point(int p) {
-		
+	public String show_point(int p) {
+		String role;
+		switch(p) {
+		case 256: role = "royal straight flush"; break;
+		case 128: role = "straight flush"; break;
+		case 64: role = "four card"; break;
+		case 32: role = "straight"; break;
+		case 24: role = "flush"; break;
+		case 16: role = "full house"; break;
+		case 8: role = "three pair"; break;
+		case 2: role = "two pair"; break;
+		case 1: role = "one pair"; break;
+		default: role="no pair"; break;
+		}
+		return role;
 	}
 	public int point_pair(int num[]) {
 		int c2 = 0, c3 = 0;
 		int k;
 		//---- four card
-		for ( k = 0; k < 13; k++) { if ( num[k] == 4) { return 64;}}
+		for ( k = 0; k < 13; k++) { 
+			if ( num[k] == 4) { 
+				return 64;
+			}
+		}
 		
 		for ( k = 0; k < 13; k++) {
 			if ( num[k] == 3) { c3++; }

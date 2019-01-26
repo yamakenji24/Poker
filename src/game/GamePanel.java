@@ -19,6 +19,8 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 int[] place = new int[5];
 	 int[] deck = new int[52];
 	 int i, point=0;
+	 String role;
+	 Font f1 = new Font("Serif", Font.PLAIN, 24);
 	 private Thread thread;
 	 boolean in_game = true;
 	 Move_card mc = new Move_card();
@@ -46,7 +48,8 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			add(hand[i]);
 			place[i] = deck[i];
 		}
-		pp.check_point(place);
+		role = pp.check_point(place);
+		repaint();
 		thread = new Thread(this);
 		thread.start();
 	}
@@ -77,6 +80,9 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		super.paintComponent(g);
 		g.clearRect(0, 0, 1000, 800); 
 		g.drawImage(ground,  0,  0,  1000, 800, null);
+		g.setFont(f1);
+		g.setColor(Color.red);
+		g.drawString(role,  460,  200);
 	}
 	@Override
 	public void run() {
@@ -100,6 +106,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 				break;
 			}
 		}
-		pp.check_point(place);
+		role = pp.check_point(place);
+		repaint();
 	}
 }
