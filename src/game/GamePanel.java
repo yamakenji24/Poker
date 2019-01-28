@@ -84,11 +84,11 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.clearRect(0, 0, 1000, 800); 
-		g.drawImage(ground,  0,  0,  1000, 800, null);
+		g.drawImage(ground,  0,  0,  1000, 800, null); // ”wŒi
 		g.setFont(f1);
 		g.setColor(Color.red);
 		g.drawString(role,  460,  200);
-		g.drawImage(backcard, 100,  200,  100,  150,  null);	
+		g.drawImage(backcard, 100,  200,  100,  150,  null); // ŽRŽD•”•ª
 	}
 	@Override
 	public void run() {
@@ -109,11 +109,20 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 				hand[k].setIcon(card[deck[i]]);
 				place[k] = deck[i];
 				mb.Move_from_deck(backcard, k);
+				System.out.println("GamePanel getSource");
 				i += 1;
 				break;
 			}
 		}
 		role = pp.check_point(place);
+		
+		try {
+			Thread.sleep(500);
+		} catch(InterruptedException err) {
+			err.printStackTrace();
+		}
+		
+		System.out.println("GamePanel Repaint");
 		repaint();
 	}
 }
