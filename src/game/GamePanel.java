@@ -23,7 +23,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 Font f1 = new Font("Serif", Font.PLAIN, 24);
 	 private Thread thread;
 	 boolean in_game = true;
-	 Move_card mc = new Move_card();
+	 //Move_card mc = new Move_card();
 	 Poker_point pp = new Poker_point();
 	 
 	public GamePanel(MainPanel panel) {
