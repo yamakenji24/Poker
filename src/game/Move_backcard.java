@@ -38,18 +38,20 @@ public class Move_backcard extends JPanel implements Runnable {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		System.out.printf("%d\n",  l);
-		g.drawImage(backcard, l,  y,  100,  150,  null);	
+		g.drawImage(backcard, l,  y,  100,  150,  this);	
 	}
-	
+	@Override
 	public void run() {
 		while (flag == true) {
 			for ( l = 100; l <= x; l+=10) {
+				System.out.printf("%d\n",  l);
 				repaint();
 				try {
-					Thread.sleep(100);
+					Thread.sleep(200);
 				} catch(InterruptedException e) {
 					e.printStackTrace();
 				}
+				repaint();
 			}
 			flag = false;
 		}

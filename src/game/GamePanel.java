@@ -14,9 +14,10 @@ import java.io.IOException;
 public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 BufferedImage ground;
 	 BufferedImage[] cardimage = new BufferedImage[52];
-	 BufferedImage backcard = null;
+	BufferedImage backcard = null;
 	 ImageIcon[] card = new ImageIcon[52];
 	 JButton[] hand = new JButton[5];
+	 JButton bc = new JButton();
 	 int[] place = new int[5];
 	 int[] deck = new int[52];
 	 int i, point=0;
@@ -52,6 +53,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			place[i] = deck[i];
 		}
 		role = pp.check_point(place);
+	
 		repaint();
 		thread = new Thread(this);
 		thread.start();
