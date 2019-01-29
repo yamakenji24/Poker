@@ -14,6 +14,7 @@ import java.io.IOException;
 public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 BufferedImage ground;
 	 BufferedImage[] cardimage = new BufferedImage[52];
+	 BufferedImage backcard;
 	 ImageIcon[] card = new ImageIcon[52];
 	 JButton[] hand = new JButton[5];
 	 int[] place = new int[5];
@@ -25,12 +26,14 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 boolean in_game = true;
 	 //Move_card mc = new Move_card();
 	 Poker_point pp = new Poker_point();
+	 Move_backcard mb = new Move_backcard();
 	 
 	public GamePanel(MainPanel panel) {
 		int p = 100;
 		setLayout(null);
 		try {
 			ground = ImageIO.read(new File("images/background.jpg"));
+			backcard = ImageIO.read(new File("images/backcard.gif"));
 			for ( i = 0; i < 52; i++) {
 				card[i] = new ImageIcon("./images/"+(i+1)+".png");
 				cardimage[i] = ImageIO.read(new File("./images/"+(i+1)+".png"));
@@ -83,6 +86,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		g.setFont(f1);
 		g.setColor(Color.red);
 		g.drawString(role,  460,  200);
+		g.drawImage(backcard, 100,  200,  100,  150,  null);	
 	}
 	@Override
 	public void run() {
@@ -102,6 +106,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			if ( e.getSource() == hand[k]) {
 				hand[k].setIcon(card[deck[i]]);
 				place[k] = deck[i];
+				mb.Move_from_deck(backcard, k);
 				i += 1;
 				break;
 			}
