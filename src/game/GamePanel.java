@@ -17,17 +17,18 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 BufferedImage backcard = null;
 	 ImageIcon[] card = new ImageIcon[52];
 	 JButton[] hand = new JButton[5];
-	 JButton bc = new JButton();
 	 int[] place = new int[5];
 	 int[] deck = new int[52];
-	 int i,x,dy,l=-100,m = 200, point=0, backplace=0,speed;
+	 int i,x,point=0, backplace=0;
+	 int l=-100,m = 200, dy,speed;  //deckìÆçÏóp
+	 int hx,hy=550,my, hspeed;   	 //handìÆçÏóp
 	 String role;
 	 Font f1 = new Font("Serif", Font.PLAIN, 24);
 	 private Thread thread;
 	 boolean in_game = true;
 	 boolean back_flag = false;
+	 boolean hand_flag = false;
 	 Poker_point pp = new Poker_point();
-	 //Move_backcard mb = new Move_backcard();
 	 
 	public GamePanel(MainPanel panel) {
 		int p = 100;
@@ -81,15 +82,51 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	}
 	public void check_place(int k) {
 		switch(k) {
-		case 0: x = 100; dy = 40; speed = 70;  break;
-		case 1: x = 250; dy = 25; speed = 50;  break;
-		case 2: x = 400; dy = 15; speed = 40; break;
-		case 3: x = 550; dy = 10; speed = 30; break;
-		case 4: x = 700; dy = 10; speed = 20; break;
+		case 0: x = 100; dy = 40; my = 10; speed = 70; hspeed = 20; break;
+		case 1: x = 250; dy = 25; my = 15; speed = 50; hspeed = 30; break;
+		case 2: x = 400; dy = 15; my = 15; speed = 40; hspeed = 30; break;
+		case 3: x = 550; dy = 10; my = 25; speed = 30; hspeed = 40; break;
+		case 4: x = 700; dy = 10; my = 30; speed = 20; hspeed = 50; break;
 		default: x = 100; break;
 		}
 	}
-	
+	public void move_from_deck() {
+		while ( back_flag) {
+			for ( l = -100; l <= x; l+=30) {
+				m += dy;
+				repaint();
+				try {
+					Thread.sleep(speed);
+				} catch(InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			l = -100; m = 200;
+			hand[backplace].setIcon(card[deck[i]]);
+			place[backplace] = deck[i];
+			hand[backplace].setVisible(true);
+			i += 1;
+			repaint();
+			back_flag = false;
+		}
+	}
+	public void move_from_hand() {
+		while(hand_flag) {
+			hand[backplace].setVisible(false);
+			for ( hx = x; hx <= 1150; hx+=30) {
+				hy -= my;
+				repaint();
+				try {
+					Thread.sleep(hspeed);
+				} catch(InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			hy = 550;
+			repaint();
+			hand_flag = false;
+		}
+	}
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -99,28 +136,16 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		g.setColor(Color.red);
 		g.drawString(role,  460,  200);	
 		g.drawImage(backcard, l,  m,  100,  150,  null);	
+		if ( hand_flag) {
+			g.drawImage(cardimage[deck[i]], hx, hy,  100,  150,  null);	
+		}
 	}
 	@Override
 	public void run() {
 		requestFocus();
 		while (in_game) {
-			while ( back_flag) {
-				for ( l = -100; l <= x; l+=30) {
-					m += dy;
-					repaint();
-					try {
-						Thread.sleep(speed);
-					} catch(InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				l = -100; m = 200;
-				hand[backplace].setIcon(card[deck[i]]);
-				place[backplace] = deck[i];
-				i += 1;
-				repaint();
-				back_flag = false;
-			}
+			move_from_hand();
+			move_from_deck();
 			repaint();
 			try {
 				Thread.sleep(200);
@@ -134,9 +159,9 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		for (int k = 0; k < 5; k++) {
 			if ( e.getSource() == hand[k]) {
 				backplace = k;
-				//mb.Move_from_deck(backcard, k);
 				check_place(k);
 				back_flag = true;
+				hand_flag = true;
 				break;
 			}
 		}
