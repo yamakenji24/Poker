@@ -12,14 +12,16 @@ import java.io.File;
 import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable, ActionListener{
+	 MainPanel mp;
 	 BufferedImage ground;
 	 BufferedImage[] cardimage = new BufferedImage[52];
 	 BufferedImage backcard = null;
 	 ImageIcon[] card = new ImageIcon[52];
 	 JButton[] hand = new JButton[5];
+	 JButton start;
 	 int[] place = new int[5];
 	 int[] deck = new int[52];
-	 int i,x,point=0, backplace=0;
+	 int i,x,point=0, backplace=-1;
 	 int l=-100,m = 200, dy,speed;  //deck動作用
 	 int hx,hy=550,my, hspeed;   	 //hand動作用
 	 String role;
@@ -32,7 +34,9 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 
 	public GamePanel(MainPanel panel) {
 		int p = 100;
+		mp = panel;
 		setLayout(null);
+		
 		try {
 			ground = ImageIO.read(new File("images/background.jpg"));
 			backcard = ImageIO.read(new File("./images/backcard.gif"));
@@ -54,12 +58,21 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			place[i] = deck[i];
 		}
 		role = pp.check_point(place);
-	
+		
 		repaint();
+		back_to_start();
 		thread = new Thread(this);
 		thread.start();
 	}
-	
+	public void back_to_start() {
+		setLayout(null);
+		setOpaque(true);
+		start = new JButton("スタート画面");
+		start.setLocation(0, 0);
+		start.setSize(115,50);
+		start.addActionListener(this);
+		add(start);
+	}
 	public void qrand(int seq[], int n) {
 		int k,p;
 		for ( k = 0; k < n; k++) {
@@ -91,7 +104,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		}
 	}
 	public void move_from_deck() {
-		while ( back_flag) {
+		while (back_flag) {
 			for ( l = -100; l <= x; l+=30) {
 				m += dy;
 				repaint();
@@ -106,11 +119,12 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			place[backplace] = deck[i];
 			hand[backplace].setVisible(true);
 			i += 1;
-			repaint();
 			back_flag = false;
+			repaint();
 		}
 	}
 	public void move_from_hand() {
+		int state = 0;
 		while(hand_flag) {
 			hand[backplace].setVisible(false);
 			for ( hx = x; hx <= 1150; hx+=30) {
@@ -123,8 +137,12 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 				}
 			}
 			hy = 550;
-			repaint();
 			hand_flag = false;
+			repaint();
+			state = 1;
+		}
+		if ( state == 1) {
+			ButtonEnabled(true);
 		}
 	}
 	@Override
@@ -134,11 +152,11 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		g.drawImage(ground,  0,  0,  1000, 800, null);
 		g.setFont(f1);
 		g.setColor(Color.red);
-		g.drawString(role,  460,  200);	
 		g.drawImage(backcard, l,  m,  100,  150,  null);	
 		if ( hand_flag) {
 			g.drawImage(cardimage[place[backplace]], hx, hy,  100,  150,  null);	
 		}
+		g.drawString(role,  460,  200);	
 	}
 	@Override
 	public void run() {
@@ -146,6 +164,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		while (in_game) {
 			move_from_hand();
 			move_from_deck();
+			role = pp.check_point(place);
 			repaint();
 			try {
 				Thread.sleep(200);
@@ -154,17 +173,28 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			}
 		}
 	}
+	public void ButtonEnabled(boolean flag) {
+		int k;
+		for ( k = 0; k < 5; k++) {
+			if ( k != backplace) {
+				hand[k].setEnabled(flag);
+			}
+		}
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if ( e.getSource() == start) {
+			mp.state = 0;
+		}
 		for (int k = 0; k < 5; k++) {
 			if ( e.getSource() == hand[k]) {
 				backplace = k;
+				ButtonEnabled(false);
 				check_place(k);
 				back_flag = true;
 				hand_flag = true;
 				break;
 			}
 		}
-		role = pp.check_point(place);
 	}
 }
