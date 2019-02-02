@@ -18,7 +18,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 JButton start;
 	 int[] place = new int[5];
 	 int[] deck = new int[52];
-	 int p1score;
+	 int p1score, chip=50;                  //ä|ÇØã‡óvëf
 	 int i,x,point=0, backplace=-1;
 	 int l=-100,m = 200, dy,speed;  //deckìÆçÏóp
 	 int hx,hy=550,my, hspeed;   	 //handìÆçÏóp
@@ -29,7 +29,6 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 boolean back_flag = false;
 	 boolean hand_flag = false;
 	 Poker_point pp = new Poker_point();
-	 //BetButton bb;
 	 
 	 public GamePanel(MainPanel panel) {
 		int p = 100;
@@ -59,9 +58,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			place[i] = deck[i];
 		}
 		role = pp.check_point(place);
-		//bb = new BetButton(this);
 		setButton();
-		//bb.setvisible(true);
 		repaint();
 		back_to_start();
 		thread = new Thread(this);
@@ -229,6 +226,11 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		}
 		for ( l = 0; l < 3; l++) {
 			if ( e.getSource() == bet[l]) {
+				if ( l == 1) {
+					p1score -= chip;
+				} else if ( l == 2) {
+					p1score -= chip*2;
+				}
 				setvisible(false);
 			}
 		}
