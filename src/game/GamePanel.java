@@ -14,6 +14,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 BufferedImage backcard,player = null;
 	 ImageIcon[] card = new ImageIcon[52];
 	 JButton[] hand = new JButton[5];
+	 JButton[] bet = new JButton[3];
 	 JButton start;
 	 int[] place = new int[5];
 	 int[] deck = new int[52];
@@ -28,8 +29,9 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 boolean back_flag = false;
 	 boolean hand_flag = false;
 	 Poker_point pp = new Poker_point();
+	 //BetButton bb;
 	 
-	public GamePanel(MainPanel panel) {
+	 public GamePanel(MainPanel panel) {
 		int p = 100;
 		p1score = 1000;
 		mp = panel;
@@ -57,12 +59,36 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			place[i] = deck[i];
 		}
 		role = pp.check_point(place);
-		
+		//bb = new BetButton(this);
+		setButton();
+		//bb.setvisible(true);
 		repaint();
 		back_to_start();
 		thread = new Thread(this);
 		thread.start();
 	}
+	 public void setButton() {
+			int k,x =300;
+			bet[0] = new JButton("フォールド");
+			bet[1] = new JButton("チェック");
+			bet[2] = new JButton("ベット");
+			
+			for ( k = 0; k < 3; k++) {
+				bet[k].addActionListener(this);
+				bet[k].setLocation(x, 300);
+				bet[k].setSize(100,30);
+				add(bet[k]);
+				x += 150;
+			}
+			setvisible(false);
+		}
+		
+		public void setvisible(boolean flag) {
+			int k;
+			for ( k = 0; k < 3; k++) {
+				bet[k].setVisible(flag);
+			}
+		}
 	public void back_to_start() {
 		setLayout(null);
 		setOpaque(true);
@@ -150,6 +176,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		}
 		if ( state == 1) {
 			ButtonEnabled(true);
+			setvisible(true);
 		}
 	}
 	@Override
@@ -186,10 +213,11 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		int k,l;
 		if ( e.getSource() == start) {
 			mp.state = 0;
 		}
-		for (int k = 0; k < 5; k++) {
+		for (k = 0; k < 5; k++) {
 			if ( e.getSource() == hand[k]) {
 				backplace = k;
 				ButtonEnabled(false);
@@ -197,6 +225,11 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 				back_flag = true;
 				hand_flag = true;
 				break;
+			}
+		}
+		for ( l = 0; l < 3; l++) {
+			if ( e.getSource() == bet[l]) {
+				setvisible(false);
 			}
 		}
 	}
