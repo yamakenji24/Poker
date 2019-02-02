@@ -25,7 +25,7 @@ public class MainPanel extends JLayeredPane implements Runnable{
 	public void run() {
 		while (in_game) {
 			try {
-				td.sleep(100);
+				Thread.sleep(100);
 			} catch(InterruptedException e) {
 				e.printStackTrace();
 			}

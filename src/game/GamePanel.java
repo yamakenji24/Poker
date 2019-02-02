@@ -1,12 +1,8 @@
 package game;
 import java.awt.*;
 import javax.imageio.ImageIO;
-import java.awt.Image;
 import javax.swing.*;
-import java.applet.*;
-import java.net.*;
 import java.awt.event.*;
-import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -15,12 +11,13 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 MainPanel mp;
 	 BufferedImage ground;
 	 BufferedImage[] cardimage = new BufferedImage[52];
-	 BufferedImage backcard = null;
+	 BufferedImage backcard,player = null;
 	 ImageIcon[] card = new ImageIcon[52];
 	 JButton[] hand = new JButton[5];
 	 JButton start;
 	 int[] place = new int[5];
 	 int[] deck = new int[52];
+	 int p1score;
 	 int i,x,point=0, backplace=-1;
 	 int l=-100,m = 200, dy,speed;  //deckìÆçÏóp
 	 int hx,hy=550,my, hspeed;   	 //handìÆçÏóp
@@ -34,12 +31,14 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 
 	public GamePanel(MainPanel panel) {
 		int p = 100;
+		p1score = 1000;
 		mp = panel;
 		setLayout(null);
 		
 		try {
 			ground = ImageIO.read(new File("images/background.jpg"));
 			backcard = ImageIO.read(new File("./images/backcard.gif"));
+			player = ImageIO.read(new File("./images/player.png"));
 			for ( i = 0; i < 52; i++) {
 				card[i] = new ImageIcon("./images/"+(i+1)+".png");
 				cardimage[i] = ImageIO.read(new File("./images/"+(i+1)+".png"));
@@ -103,6 +102,14 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		default: x = 100; break;
 		}
 	}
+	public void ButtonEnabled(boolean flag) {
+		int k;
+		for ( k = 0; k < 5; k++) {
+			if ( k != backplace) {
+				hand[k].setEnabled(flag);
+			}
+		}
+	}
 	public void move_from_deck() {
 		while (back_flag) {
 			for ( l = -100; l <= x; l+=30) {
@@ -150,6 +157,10 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		super.paintComponent(g);
 		g.clearRect(0, 0, 1000, 800); 
 		g.drawImage(ground,  0,  0,  1000, 800, null);
+		g.drawImage(player, 20, 450, 300, 100, null);
+		g.setColor(new Color(34, 200, 34));
+		g.setFont(new Font("Serif", Font.PLAIN, 26));
+		g.drawString(String.valueOf(p1score),  110,  530);
 		g.setFont(f1);
 		g.setColor(Color.red);
 		g.drawImage(backcard, l,  m,  100,  150,  null);	
@@ -170,14 +181,6 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 				Thread.sleep(200);
 			} catch(InterruptedException e) {
 				e.printStackTrace();
-			}
-		}
-	}
-	public void ButtonEnabled(boolean flag) {
-		int k;
-		for ( k = 0; k < 5; k++) {
-			if ( k != backplace) {
-				hand[k].setEnabled(flag);
 			}
 		}
 	}
