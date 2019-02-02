@@ -11,14 +11,14 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 MainPanel mp;
 	 BufferedImage ground;
 	 BufferedImage[] cardimage = new BufferedImage[52];
-	 BufferedImage backcard,player = null;
+	 BufferedImage backcard,chipimage, player = null;
 	 ImageIcon[] card = new ImageIcon[52];
 	 JButton[] hand = new JButton[5];
 	 JButton[] bet = new JButton[3];
-	 JButton start;
+	 JButton start, raise_bet;
 	 int[] place = new int[5];
 	 int[] deck = new int[52];
-	 int p1score, chip=50;                  //掛け金要素
+	 int p1score, chip=50, chipbet = 0;                  //掛け金要素
 	 int i,x,point=0, backplace=-1;
 	 int l=-100,m = 200, dy,speed;  //deck動作用
 	 int hx,hy=550,my, hspeed;   	 //hand動作用
@@ -26,8 +26,8 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 Font f1 = new Font("Serif", Font.PLAIN, 24);
 	 private Thread thread;
 	 boolean in_game = true;
-	 boolean back_flag = false;
-	 boolean hand_flag = false;
+	 boolean back_flag = false, hand_flag = false;
+	 boolean chip_bet = false, raise_flag = false;
 	 Poker_point pp = new Poker_point();
 	 
 	 public GamePanel(MainPanel panel) {
@@ -40,6 +40,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			ground = ImageIO.read(new File("images/background.jpg"));
 			backcard = ImageIO.read(new File("./images/backcard.gif"));
 			player = ImageIO.read(new File("./images/player.png"));
+			chipimage = ImageIO.read(new File("./images/chip.png"));
 			for ( i = 0; i < 52; i++) {
 				card[i] = new ImageIcon("./images/"+(i+1)+".png");
 				cardimage[i] = ImageIO.read(new File("./images/"+(i+1)+".png"));
@@ -63,29 +64,41 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		back_to_start();
 		thread = new Thread(this);
 		thread.start();
-	}
+	 }
 	 public void setButton() {
-			int k,x =300;
-			bet[0] = new JButton("フォールド");
-			bet[1] = new JButton("チェック");
-			bet[2] = new JButton("ベット");
-			
-			for ( k = 0; k < 3; k++) {
-				bet[k].addActionListener(this);
-				bet[k].setLocation(x, 300);
-				bet[k].setSize(100,30);
-				add(bet[k]);
-				x += 150;
-			}
-			setvisible(false);
-		}
+		int k,x =300;
+		bet[0] = new JButton("フォールド");
+		bet[1] = new JButton("チェック");
+		bet[2] = new JButton("ベット");
+		raise_bet = new JButton("レイズ");
 		
-		public void setvisible(boolean flag) {
-			int k;
-			for ( k = 0; k < 3; k++) {
-				bet[k].setVisible(flag);
-			}
+		for ( k = 0; k < 3; k++) {
+			bet[k].addActionListener(this);
+			bet[k].setLocation(x, 300);
+			bet[k].setSize(100,30);
+			add(bet[k]);
+			x += 150;
 		}
+		raise_bet.addActionListener(this);
+		raise_bet.setLocation(450, 350);
+		raise_bet.setSize(100, 30);
+		add(raise_bet);
+		
+		setvisible(false);
+	}
+		
+	public void setvisible(boolean flag) {
+		int k;
+		for ( k = 0; k < 3; k++) {
+			bet[k].setVisible(flag);
+		}
+		if ( chip_bet==true && flag==true) {
+			bet[1].setVisible(false);
+			raise_bet.setVisible(true);
+		} else if (flag == false ) {
+			raise_bet.setVisible(false);
+		}
+	}
 	public void back_to_start() {
 		setLayout(null);
 		setOpaque(true);
@@ -150,6 +163,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			hand[backplace].setVisible(true);
 			i += 1;
 			back_flag = false;
+			setvisible(true);
 			repaint();
 		}
 	}
@@ -173,7 +187,6 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		}
 		if ( state == 1) {
 			ButtonEnabled(true);
-			setvisible(true);
 		}
 	}
 	@Override
@@ -187,11 +200,17 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		g.drawString(String.valueOf(p1score),  110,  530);
 		g.setFont(f1);
 		g.setColor(Color.red);
-		g.drawImage(backcard, l,  m,  100,  150,  null);	
+		g.drawImage(backcard, l,  m,  100,  150,  null);
+		g.drawString(role,  460,  200);	
 		if ( hand_flag) {
 			g.drawImage(cardimage[place[backplace]], hx, hy,  100,  150,  null);	
 		}
-		g.drawString(role,  460,  200);	
+		if ( chip_bet) {
+			g.drawImage(chipimage, 440, 400,  120,  100,  null);
+			g.setColor(new Color(34, 200, 34));
+			g.setFont(new Font("Serif", Font.PLAIN, 22));
+			g.drawString(String.valueOf(chipbet),  485,  460);
+		}
 	}
 	@Override
 	public void run() {
@@ -226,13 +245,25 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		}
 		for ( l = 0; l < 3; l++) {
 			if ( e.getSource() == bet[l]) {
-				if ( l == 1) {
-					p1score -= chip;
+				if ( l == 0) {
+					chipbet = 0;
+					chip_bet = false;
+					raise_flag = false;
+				} else if ( l == 1) {
+				
 				} else if ( l == 2) {
-					p1score -= chip*2;
+					p1score -= chip;
+					chipbet += chip;
+					chip_bet = true;
+					raise_flag = true;
 				}
 				setvisible(false);
 			}
+		}
+		if ( e.getSource() == raise_bet) {
+			p1score -= chip*2;
+			chipbet += chip*2;
+			setvisible(false);
 		}
 	}
 }
