@@ -11,7 +11,7 @@ import java.io.IOException;
 public class StartMenu extends JPanel implements ActionListener{
 	MainPanel mp;
 	BufferedImage background;
-	JButton startButton, instructions;
+	JButton startButton, instructions, difficulty;
 	
 	public StartMenu(MainPanel tmp) {
 		super();
@@ -21,20 +21,27 @@ public class StartMenu extends JPanel implements ActionListener{
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
+		setButton();
+	}
+	public void setButton() {
 		setLayout(null);
 		setOpaque(true);
 		startButton = new JButton("GAME START!");
 		instructions = new JButton("ëÄçÏê‡ñæ");
-		startButton.setLocation(320, 400);
-		instructions.setLocation(320, 500);
+		difficulty = new JButton("ìÔà’ìxëIë");
+		startButton.setLocation(400, 400);
+		instructions.setLocation(400, 500);
+		difficulty.setLocation(400, 600);
 		startButton.setSize(150,50);
 		instructions.setSize(150,50);
+		difficulty.setSize(150, 50);
 		startButton.addActionListener(this);
 		instructions.addActionListener(this);
+		difficulty.addActionListener(this);
 		add(startButton);
 		add(instructions);
+		add(difficulty);
 	}
-	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -51,6 +58,8 @@ public class StartMenu extends JPanel implements ActionListener{
 			mp.state=1;
 		} else if (e.getSource() == startButton) {
 			mp.state=2;
+		} else if (e.getSource() == difficulty) {
+			mp.state = 3;
 		}
 	}
 	
