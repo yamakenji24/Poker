@@ -13,7 +13,8 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 BufferedImage[] cardimage = new BufferedImage[52];
 	 BufferedImage backcard,chipimage, player = null;
 	 ImageIcon[] card = new ImageIcon[52];
-	 JButton[] hand = new JButton[5];
+	 JButton[] playerhand = new JButton[5];
+	 JButton[] npchand = new JButton[5];
 	 JButton[] bet = new JButton[3];
 	 JButton start, raise_bet;
 	 int[] place = new int[5];
@@ -31,7 +32,6 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 Poker_point pp = new Poker_point();
 	 
 	 public GamePanel(MainPanel panel) {
-		int p = 100;
 		p1score = 1000;
 		mp = panel;
 		setLayout(null);
@@ -49,21 +49,25 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			e.printStackTrace();
 		}
 		qrand(deck, 52);
-		for ( i = 0; i < 5; i++) {
-			hand[i] = new JButton(card[deck[i]]);
-			hand[i].addActionListener(this);
-			hand[i].setLocation(p, 550);
-			hand[i].setSize(130, 190);
-			p += 150;
-			add(hand[i]);
-			place[i] = deck[i];
-		}
+		sethand();
 		role = pp.check_point(place);
 		setButton();
 		repaint();
 		back_to_start();
 		thread = new Thread(this);
 		thread.start();
+	 }
+	 public void sethand() {
+		 int p = 100;
+		 for ( i = 0; i < 5; i++) {
+				playerhand[i] = new JButton(card[deck[i]]);
+				playerhand[i].addActionListener(this);
+				playerhand[i].setLocation(p, 550);
+				playerhand[i].setSize(130, 190);
+				p += 150;
+				add(playerhand[i]);
+				place[i] = deck[i];
+			}
 	 }
 	 public void setButton() {
 		int k,x =300;
@@ -142,7 +146,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		int k;
 		for ( k = 0; k < 5; k++) {
 			if ( k != backplace) {
-				hand[k].setEnabled(flag);
+				playerhand[k].setEnabled(flag);
 			}
 		}
 	}
@@ -158,9 +162,9 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 				}
 			}
 			l = -100; m = 200;
-			hand[backplace].setIcon(card[deck[i]]);
+			playerhand[backplace].setIcon(card[deck[i]]);
 			place[backplace] = deck[i];
-			hand[backplace].setVisible(true);
+			playerhand[backplace].setVisible(true);
 			i += 1;
 			back_flag = false;
 			setvisible(true);
@@ -170,7 +174,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	public void move_from_hand() {
 		int state = 0;
 		while(hand_flag) {
-			hand[backplace].setVisible(false);
+			playerhand[backplace].setVisible(false);
 			for ( hx = x; hx <= 1150; hx+=30) {
 				hy -= my;
 				repaint();
@@ -234,7 +238,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			mp.state = 0;
 		}
 		for (k = 0; k < 5; k++) {
-			if ( e.getSource() == hand[k]) {
+			if ( e.getSource() == playerhand[k]) {
 				backplace = k;
 				ButtonEnabled(false);
 				check_place(k);
