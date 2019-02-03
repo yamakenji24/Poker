@@ -8,21 +8,25 @@ import java.io.File;
 import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable, ActionListener{
-	 MainPanel mp;
+	private static final long serialVersionUID = 1L;
+	MainPanel mp;
 	 BufferedImage ground;
 	 BufferedImage[] cardimage = new BufferedImage[52];
 	 BufferedImage backcard,chipimage, player = null;
 	 ImageIcon[] card = new ImageIcon[52];
 	 JButton[] playerhand = new JButton[5];
 	 int[] npchand = new int[5];
+	 int[] ud = new int[52];						//Ì‚ÄD
+	 int us;										//
 	 JButton[] bet = new JButton[3];
-	 JButton start, raise_bet;
-	 int[] place = new int[5];
-	 int[] deck = new int[52];
+	 JButton start, raise_bet;						
+	 int[] place = new int[5];						//èD‚ÌƒJ[ƒh’l
+	 int[] deck = new int[52];						//RD
 	 int p1score, chip=50, chipbet = 0;                  //Š|‚¯‹à—v‘f
 	 int i,x,point=0, backplace=-1;
 	 int l=-100,m = 200, dy,speed;  //deck“®ì—p
 	 int hx,hy=550,my, hspeed;   	 //hand“®ì—p
+	 int npcplace;					//npc ŒğŠ·êŠ
 	 String role;
 	 Font f1 = new Font("Serif", Font.PLAIN, 24);
 	 private Thread thread;
@@ -30,6 +34,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 boolean back_flag = false, hand_flag = false;
 	 boolean chip_bet = false, raise_flag = false;
 	 Poker_point pp = new Poker_point();
+	 Npc_simulation npcsimu = new Npc_simulation();
 	 
 	 public GamePanel(MainPanel panel) {
 		p1score = 1000;
@@ -255,6 +260,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 				check_place(k);
 				back_flag = true;
 				hand_flag = true;
+				//npcsimu.copy_deck(npchand);
 				break;
 			}
 		}

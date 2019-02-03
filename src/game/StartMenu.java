@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 
 public class StartMenu extends JPanel implements ActionListener{
+	private static final long serialVersionUID = 1L;
 	MainPanel mp;
 	BufferedImage background;
 	JButton startButton, instructions, difficulty;

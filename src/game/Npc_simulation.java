@@ -3,11 +3,11 @@ package game;
 import javax.swing.JPanel;
 
 public class Npc_simulation extends JPanel{
+	private static final long serialVersionUID = 1L;
 	int[] left_deck = new int[52];
 	int[] hand = new int[5];
 	int k;
 	String role;
-	private Thread thread;
 	Poker_point point = new Poker_point();
 	
 	public Npc_simulation() {
@@ -47,7 +47,6 @@ public class Npc_simulation extends JPanel{
 	}
 	public int expect(int left_deck[], int hand[], int place) {
 		int k, tmp=0, total=0;
-		
 		for ( k = 0; k < 52; k++) {
 			if (left_deck[k] != 0) {
 				hand[place] = k;
