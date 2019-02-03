@@ -26,6 +26,9 @@ public class Poker_point {
 		if ( p0 < p3) { p0 = p3; }
 		return show_point(p0);
 	}
+	public int return_point() {
+		return p0;
+	}
 	public String show_point(int p) {
 		String role;
 		switch(p) {

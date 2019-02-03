@@ -14,7 +14,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 BufferedImage backcard,chipimage, player = null;
 	 ImageIcon[] card = new ImageIcon[52];
 	 JButton[] playerhand = new JButton[5];
-	 JButton[] npchand = new JButton[5];
+	 int[] npchand = new int[5];
 	 JButton[] bet = new JButton[3];
 	 JButton start, raise_bet;
 	 int[] place = new int[5];
@@ -58,36 +58,39 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		thread.start();
 	 }
 	 public void sethand() {
-		 int p = 100;
+		 int p = 100, j;
 		 for ( i = 0; i < 5; i++) {
-				playerhand[i] = new JButton(card[deck[i]]);
-				playerhand[i].addActionListener(this);
-				playerhand[i].setLocation(p, 550);
-				playerhand[i].setSize(130, 190);
-				p += 150;
-				add(playerhand[i]);
-				place[i] = deck[i];
-			}
+			playerhand[i] = new JButton(card[deck[i]]);
+			playerhand[i].addActionListener(this);
+			playerhand[i].setLocation(p, 550);
+			playerhand[i].setSize(130, 190);
+			p += 150;
+			add(playerhand[i]);
+			place[i] = deck[i];
+		}
+		for ( j = 0; j < 5; j++) {
+			npchand[j] = deck[i++];
+		}
 	 }
 	 public void setButton() {
-		int k,x =300;
-		bet[0] = new JButton("フォールド");
-		bet[1] = new JButton("チェック");
-		bet[2] = new JButton("ベット");
-		raise_bet = new JButton("レイズ");
+		 int k,x =300;
+		 bet[0] = new JButton("フォールド");
+		 bet[1] = new JButton("チェック");
+		 bet[2] = new JButton("ベット");
+		 raise_bet = new JButton("レイズ");
 		
-		for ( k = 0; k < 3; k++) {
-			bet[k].addActionListener(this);
-			bet[k].setLocation(x, 300);
-			bet[k].setSize(100,30);
-			add(bet[k]);
-			x += 150;
+		 for ( k = 0; k < 3; k++) {
+			 bet[k].addActionListener(this);
+			 bet[k].setLocation(x, 300);
+			 bet[k].setSize(100,30);
+			 add(bet[k]);
+			 x += 150;
 		}
 		raise_bet.addActionListener(this);
 		raise_bet.setLocation(450, 350);
 		raise_bet.setSize(100, 30);
 		add(raise_bet);
-		
+	
 		setvisible(false);
 	}
 		
@@ -206,6 +209,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		g.setColor(Color.red);
 		g.drawImage(backcard, l,  m,  100,  150,  null);
 		g.drawString(role,  460,  200);	
+		shownpc(g);
 		if ( hand_flag) {
 			g.drawImage(cardimage[place[backplace]], hx, hy,  100,  150,  null);	
 		}
@@ -214,6 +218,13 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			g.setColor(new Color(34, 200, 34));
 			g.setFont(new Font("Serif", Font.PLAIN, 22));
 			g.drawString(String.valueOf(chipbet),  485,  460);
+		}
+	}
+	public void shownpc(Graphics g) {
+		int k, x = 250;
+		for ( k = 0; k < 5; k++) {
+			g.drawImage(backcard, x,  50,  70,  100,  null);
+			x += 100;
 		}
 	}
 	@Override
