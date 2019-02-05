@@ -17,7 +17,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 JButton[] playerhand = new JButton[5];
 	 int[] npchand = new int[5];
 	 int[] ud = new int[52];						//捨て札
-	 int us;										//
+	 int us=0;										//捨て数
 	 JButton[] bet = new JButton[3];
 	 JButton start, raise_bet;						
 	 int[] place = new int[5];						//手札のカード値
@@ -247,6 +247,12 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 			}
 		}
 	}
+	public void change_npchand() {
+		int tmp;
+		tmp = npcsimu.copy_deck(npchand, ud, us);
+		ud[us++] = npchand[tmp];
+		npchand[tmp] = deck[i++];
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		int k,l;
@@ -256,11 +262,12 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		for (k = 0; k < 5; k++) {
 			if ( e.getSource() == playerhand[k]) {
 				backplace = k;
+				ud[us++] = place[k];
+				change_npchand();
 				ButtonEnabled(false);
 				check_place(k);
 				back_flag = true;
 				hand_flag = true;
-				//npcsimu.copy_deck(npchand);
 				break;
 			}
 		}

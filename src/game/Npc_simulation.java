@@ -10,6 +10,7 @@ public class Npc_simulation extends JPanel{
 	String role;
 	Poker_point point = new Poker_point();
 	
+	
 	public Npc_simulation() {
 		
 	}
