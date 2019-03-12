@@ -51,6 +51,7 @@ public class Npc_simulation extends JPanel{
 		for ( k = 0; k < 52; k++) {
 			if (left_deck[k] != 0) {
 				hand[place] = k;
+				point.check_point(hand);
 				tmp = point.return_point();
 				if ( tmp >= 8) { total += tmp; }
 			}

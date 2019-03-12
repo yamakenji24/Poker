@@ -35,6 +35,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	 boolean chip_bet = false, raise_flag = false;
 	 Poker_point pp = new Poker_point();
 	 Npc_simulation npcsimu = new Npc_simulation();
+	 Toolkit tk;
 	 
 	 public GamePanel(MainPanel panel) {
 		p1score = 1000;
@@ -42,6 +43,9 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		setLayout(null);
 		
 		try {
+			tk = Toolkit.getDefaultToolkit();
+			//ground = (BufferedImage) tk.getImage(getClass().getResource("/images/background.jpg"));
+			//BufferedImage image = ImageIO.read(MyClass.class.getResourceAsStream("/images/grass.png"));
 			ground = ImageIO.read(new File("images/background.jpg"));
 			backcard = ImageIO.read(new File("./images/backcard.gif"));
 			player = ImageIO.read(new File("./images/player.png"));
@@ -53,7 +57,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		qrand(deck, 52);
+		qrand(deck, ud, 52);
 		sethand();
 		role = pp.check_point(place);
 		setButton();
@@ -120,10 +124,11 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 		start.addActionListener(this);
 		add(start);
 	}
-	public void qrand(int seq[], int n) {
+	public void qrand(int seq[], int ud[], int n) {
 		int k,p;
 		for ( k = 0; k < n; k++) {
 			seq[k] = k;
+			ud[k] = 0;
 		}
 		for ( k = 1; k < n; k++) {
 			p = irand(k+1);
@@ -250,8 +255,10 @@ public class GamePanel extends JPanel implements Runnable, ActionListener{
 	public void change_npchand() {
 		int tmp;
 		tmp = npcsimu.copy_deck(npchand, ud, us);
-		ud[us++] = npchand[tmp];
-		npchand[tmp] = deck[i++];
+		//ud[us++] = npchand[tmp];
+		//System.out.printf("%d", tmp);
+		//npchand[tmp] = deck[i++];
+		
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
